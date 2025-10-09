@@ -5,6 +5,7 @@ body {
   background-color: #1a1a1d;
   color: #f0f0f0;
   font-family: "Inter", sans-serif;
+  flex-wrap: wrap;
 }
 
 /* Header */
