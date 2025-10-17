@@ -21,9 +21,18 @@ body {
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #eab308;
+  height: 40px; /* Ajusta la altura del contenedor del logo */
+
+}
+
+.logo img {
+  height: 120%; /* La imagen se ajusta a la altura del contenedor */
+  width: 120%; /* El ancho se ajusta para mantener la proporción */
+
+}
+
+.logo:hover {
+  cursor: pointer;
 }
 
 .nav-list {
