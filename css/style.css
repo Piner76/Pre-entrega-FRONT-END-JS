@@ -211,6 +211,7 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   
+    
 }
 
 .tarjeta-producto{
@@ -222,6 +223,7 @@ body {
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   overflow: hidden;
   text-align: center;
+  padding: 2rem;
 
 
 }
@@ -245,8 +247,13 @@ body {
 }
 
 .tarjeta-producto h3 {
-  font-size: 1.3rem;
-  margin: 10px 0 5px 0;
+  font-size: 1rem;
+  height: 8rem;
+  overflow: hidden; /* Oculta el texto que se desborda */
+
+  
+
+  
 } 
 .tarjeta-producto p {
   font-size: 1.0rem;

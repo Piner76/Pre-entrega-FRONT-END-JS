@@ -2,8 +2,8 @@
 import { agregarAlCarrito, eliminarCarrito} from "./funcionesCarrito.js";
 import { guardarCarrito,obtenerCarrito} from "./storage.js";
 import { actualizarContador } from "./ui.js";
-import { arrayMenu ,arrayProductos} from "./arrayDatos.js";
-import {cerrarCarrito,abrirCarrito,actualizarCarritoLateral} from "./carrito.js";
+import { arrayMenu } from "./arrayDatos.js";
+import {cerrarCarrito,abrirCarrito,actualizarCarrito,vacioCarrito,limpiarCantidadesTarjetas} from "./carrito.js";
 
 const menuInteractivo = document.getElementById('menu-interactivo');
 let menuTabs = document.createElement('div');
@@ -20,7 +20,7 @@ const btnAbrir = document.getElementById("contador-carrito");
 if (btnAbrir) {
      btnAbrir.addEventListener("click", () => {
     if (btnAbrir)    
-    actualizarCarritoLateral();
+    actualizarCarrito();
     abrirCarrito();
 });
 } else {
@@ -40,7 +40,6 @@ if (btnCerrar){
 const carrito = obtenerCarrito();
 actualizarContador(carrito);
 
-
 /*
     * genero tarjetas de productos en home
 */
@@ -49,20 +48,26 @@ export const productosHome = document.getElementById('productos-home');
 let tarjetasContainer = document.createElement('div');
 tarjetasContainer.className = "contenedor-tarjetas" ;
 
-arrayProductos.forEach((productosHome) => {
+let urlCategoria = "https://dummyjson.com/products/category/smartphones";
+//arrayProductos.forEach((productosHome) => {
+    fetch(urlCategoria)
+    .then((response) => response.json())
+    .then((data) =>
+
+    data.products.forEach((producto) =>{
 
     let artTarjeta = document.createElement('article');
     artTarjeta.className = 'tarjeta-producto';
 
     const imgElement = document.createElement('img');
-    imgElement.src = productosHome.img;
-    imgElement.alt = productosHome.categoria;
+    imgElement.src = producto.images[0];
+    imgElement.alt = producto.category;
 
     const h3Element = document.createElement('h3');
-    h3Element.textContent = productosHome.descripcion;
+    h3Element.textContent = producto.title;
 
     const pElement = document.createElement('p');
-    pElement.textContent = `Precio :${productosHome.precio}`;
+    pElement.textContent = `Precio :${producto.price}`;
 
 
     //creo contenedor con botonera para agregar o quitar del carrito 
@@ -85,9 +90,9 @@ arrayProductos.forEach((productosHome) => {
 
     // --- cambiado: inicializar cantidad desde el carrito guardado ---
     // usar id si existe o descripcion como clave
-    const productoKey = productosHome.id ?? productosHome.descripcion;
+    const productoKey = producto.id ?? productos.description;
     const initCarrito = obtenerCarrito();
-    const initItem = initCarrito.find(it => (it.id ?? it.descripcion) === productoKey);
+    const initItem = initCarrito.find(it => (it.id ?? it.description) === productoKey);
     if (initItem && typeof initItem.cantidad === 'number') {
         pElementCantidad.value = String(initItem.cantidad);
     }
@@ -96,23 +101,23 @@ arrayProductos.forEach((productosHome) => {
     //Botones + y - para agregar o quitar del carrito
     // ---------------------------------------------------------------
     btnMas.addEventListener('click', () => {
-        let cantidad = parseInt(pElementCantidad.value);
-        cantidad += 1;
-        pElementCantidad.value = cantidad.toString();
+    let cantidad = parseInt(pElementCantidad.value);
+    cantidad += 1;
+    pElementCantidad.value = cantidad.toString();
         
-        agregarAlCarrito(productosHome); //agrego al carrito
-        // obtener el carrito actualizado 
-        let carritoActual = obtenerCarrito();
-        // sincronizo cantidad en el carrito guardado
-        let item = carritoActual.find(it => (it.id ?? it.descripcion) === productoKey);
-        if (item) {
-            // si no tiene cantidad, la inicializo/actualizo
-            if (typeof item.cantidad !== 'number') item.cantidad = cantidad;
-            else item.cantidad = cantidad;
-        } else {
-            // si no existe en el carrito, lo agrego con la cantidad actual
-            carritoActual.push({ ...productosHome, cantidad });
-        }
+    agregarAlCarrito(producto); //agrego al carrito
+    // obtener el carrito actualizado 
+    let carritoActual = obtenerCarrito();    
+    // sincronizo cantidad en el carrito guardado
+    let item = carritoActual.find(it => (it.id ?? it.description) === productoKey);
+    if (item) {
+    // si no tiene cantidad, la inicializo/actualizo
+    if (typeof item.cantidad !== 'number') item.cantidad = cantidad;
+        else item.cantidad = cantidad;
+    } else {
+       // si no existe en el carrito, lo agrego con la cantidad actual
+       carritoActual.push({ producto, cantidad });
+    }
         guardarCarrito(carritoActual);
         actualizarContador(carritoActual);
     });
@@ -124,10 +129,10 @@ arrayProductos.forEach((productosHome) => {
             pElementCantidad.value = cantidad.toString();
         
             // elimino una unidad del carrito (función existente)
-            eliminarCarrito(productosHome);
+            eliminarCarrito(producto);
             // sincronizo cantidad en el carrito guardado
             let carritoActual = obtenerCarrito();
-            let item = carritoActual.find(it => (it.id ?? it.descripcion) === productoKey);
+            let item = carritoActual.find(it => (it.id ?? it.description) === productoKey);
             if (item) {
                 if (cantidad > 0) {
                     item.cantidad = cantidad;
@@ -149,6 +154,19 @@ arrayProductos.forEach((productosHome) => {
         }
     });
 
+    //Vacio el carrito de compras
+    const btnVaciarCarrito = document.getElementById('vaciar-carrito');
+    if (btnVaciarCarrito){
+        btnVaciarCarrito.addEventListener("click", () => {
+        limpiarCantidadesTarjetas();
+        vacioCarrito();
+        
+    });} else {
+        console.warn('vaciar-carrito no encontrado en el DOM');
+    }
+
+    
+
     //desplego carrito de compras
 
     dElementoBotones.appendChild(btnMenos);
@@ -159,7 +177,12 @@ arrayProductos.forEach((productosHome) => {
     artTarjeta.appendChild(pElement);
     artTarjeta.appendChild(dElementoBotones)
     tarjetasContainer.appendChild(artTarjeta);   
-});
+    })
+    );
+
+    
+    
+
 
     document.addEventListener('DOMContentLoaded', () => {
         menuInteractivo.appendChild(menuTabs);

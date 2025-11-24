@@ -24,7 +24,7 @@ export const eliminarCarrito = (indice) => {
 export const vaciarCarrito =() => {
     vaciarCarritoStorage()
     actualizarContador([])
-    mostrarMensajes("Carrito vaciado")
+   // mostrarMensajes("Carrito vaciado")
 }
 
 export function soloEnteros(e) {
