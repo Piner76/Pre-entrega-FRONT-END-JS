@@ -6,7 +6,7 @@
 export const arrayCategorias = [
     {nombre : 'Cervezas',img:"../img/Cervesas2.jpg", descripcion : 'Las mejores cervezas nacionales e importadas.'},
     {nombre : 'Vinos', img:"../img/vinos.jpg", descripcion : 'Variedades tintos, blancos y espumantes.'},    
-    {nombre : 'Bebidas',img:"../img/tragos2.jpg", descripcion : 'Refrescos clasicos y nuevas tendencias'}
+    {nombre : 'Bebidas',img:"../img/tragos2.jpg", descripcion : 'Aperitivos clasicos y nuevas tendencias'}
 ]
 
 
