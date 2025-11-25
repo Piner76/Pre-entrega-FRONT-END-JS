@@ -1,5 +1,5 @@
 import { arrayCategorias } from "./arrayDatos.js";
-import {  } from "./producto.js";
+//import {  } from "./producto.js";
 
 /*
     * genero menu interactivo de bebidas 
